@@ -1,22 +1,36 @@
-import { Box, IconButton, Stack, Typography, InputBase, Button, Divider, Avatar, Badge } from
-  '@mui/material'
+import React, { useState, useEffect } from 'react';
+import { Box, IconButton, Stack, Typography, Button, Divider } from '@mui/material';
 import { ArchiveBox, CircleDashed, MagnifyingGlass } from 'phosphor-react';
-import {useTheme } from '@mui/material/styles';
-import React from 'react';
-import { faker } from '@faker-js/faker';
-import {ChatList} from '../../data';
-import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Search';
+import { useTheme } from '@mui/material/styles';
 import ChatElement from '../../components/ChatElement';
+import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Search';
 
 const Chats = () => {
   const theme = useTheme();
-  return (    
+  const [messages, setMessages] = useState([]);
+
+  // Assume token is stored in localStorage under the key 'token'. Adjust as needed.
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
+  console.log(token);
+  useEffect(() => {
+    // Fetch messages from the backend URL
+    fetch('http://localhost:5000/api/messages/group_763b5f5e-464f-4b87-a7c4-14fee99c8849', {
+      headers: {
+        Authorization: `Bearer ${token}` // Send token in the Authorization header
+      }
+    })
+      .then(response => response.json())
+      .then(data => { setMessages(data.data); console.log(data); })
+      .catch(error => console.error('Error fetching messages:', error));
+  }, [token]); // Include token in the dependency array to refetch messages when token changes
+
+  return (
     <Box sx={{
-      position: "relative", width: 320, 
-      backgroundColor: theme.palette.mode === 'light'? "#F8FAFF" : theme.palette.background.paper,
+      position: "relative", width: 320,
+      backgroundColor: theme.palette.mode === 'light' ? "#F8FAFF" : theme.palette.background.paper,
       boxShadow: '0px 0px 2px rgba(0,0,0,0.25)'
     }}>
-      <Stack p={3} spacing={2} sx={{height:"100vh"}}>
+      <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
         <Stack direction="row" alignItems='center' justifyContent='space-between'>
           <Typography variant='h5'>
             Chats
@@ -45,33 +59,19 @@ const Chats = () => {
           <Divider />
         </Stack>
 
-        <Stack className='scrollbar' spacing={2} direction='column' sx={{flexGrow:1, overflow:'scroll', height:'100%'}}>
-
-            <Stack spacing={2.4}>
-              <Typography variant='subtitle2' sx={{color:"#676767"}}>
-                Pinned
-              </Typography>
-              {ChatList.filter((el)=> el.pinned).map((el)=>{
-                return <ChatElement  {...el}/>
-              })}
-              
-            </Stack>
-          
+        <Stack className='scrollbar' spacing={2} direction='column' sx={{ flexGrow: 1, overflow: 'scroll', height: '100%' }}>
           <Stack spacing={2.4}>
-            <Typography variant='subtitle2' sx={{color:"#676767"}}>
+            <Typography variant='subtitle2' sx={{ color: "#676767" }}>
               All Chats
             </Typography>
-            {ChatList.filter((el)=> !el.pinned).map((el)=>{
-              return <ChatElement {...el}/>
-            })}
-            
+            {messages.map((message, index) => (
+              <ChatElement key={index} message={message} />
+            ))}
           </Stack>
-          
         </Stack>
       </Stack>
-
     </Box>
-  )
+  );
 }
 
-export default Chats
+export default Chats;

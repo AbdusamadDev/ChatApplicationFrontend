@@ -1,13 +1,41 @@
 import { Box, Stack } from '@mui/material'
-import React from 'react';
-import {Chat_History} from '../../data'
+import React, { useEffect, useState } from 'react';
+import { Chat_History } from '../../data'
 import { DocMsg, LinkMsg, MediaMsg, ReplyMsg, TextMsg, TimeLine } from './MsgTypes';
+import axios from 'axios';
+import { logDOM } from '@testing-library/react';
 
-const Message = ({menu}) => {
+const Message = ({ menu }) => {
+  let [state, name] = useState();
+  async function fetchMessages() {
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
+    let messages = await axios.get("http://localhost:5000/api/messages/group_763b5f5e-464f-4b87-a7c4-14fee99c8849", { headers: { "Authorization": `Bearer ${token}` } });
+    // console.log("The messages: ", messages);
+    name(messages.data.data)
+  }
+  let [user, setUser] = useState();
+  async function getMe() {
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
+    let me = await axios.get("http://localhost:5000/auth/me", { headers: { "Authorization": `Bearer ${token}` } })
+    console.log("User: ", me);
+    setUser(me.data);
+  }
+  useEffect(
+    () => {
+      fetchMessages();
+      getMe();
+    }, []
+  )
+  console.log("The state: ", state);
   return (
     <Box p={3}>
-        <Stack spacing={3}>
-            {Chat_History.map((el)=>{
+      <Stack spacing={3}>
+        {
+          state?.map((clb) => {
+            return <TextMsg el={clb} menu={menu} userID={user?.id} />;
+          })
+        }
+        {/* {state.map((el)=>{
                 switch (el.type) {
                     case 'divider':
                       return <TimeLine el={el}/>
@@ -32,8 +60,8 @@ const Message = ({menu}) => {
                     default:
                       return <></>;
                 }
-            })}
-        </Stack>
+            })} */}
+      </Stack>
     </Box>
   )
 }
