@@ -48,7 +48,7 @@ const StyledInput = styled(TextField)(({ theme }) => ({
 const ChatInput = ({setOpenPicker}) =>{
     const [openAction, setOpenAction] = useState(false);
     return (
-        <StyledInput fullWidth placeholder='Write a message...' variant='filled' InputProps={{
+        <StyledInput name='msg' fullWidth placeholder='Write a message...' variant='filled' InputProps={{
             disableUnderline: true,
             startAdornment: 
             <Stack sx={{width:'max-content'}}>
@@ -85,8 +85,23 @@ const ChatInput = ({setOpenPicker}) =>{
 const Footer = () => {
     const theme = useTheme();
     const [openPicker, setOpenPicker] = useState(false);
+    const userData = JSON.parse(sessionStorage.getItem('user'))
+    
+    const socket = new WebSocket('ws://localhost:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d')
+    function handleSubmit(e) {
+        e.preventDefault()
+        const message = e.target.msg.value
+        //     console.log(e.target.msg.value);
+        // socket.addEventListener("open", ()=>console.log("true"))
+    socket.send(JSON.stringify({
+        message: message,
+        type: "text",
+        user: userData
+    }))
+    
+    }
   return (
-    <Box p={2} sx={{ width:'100%', backgroundColor: theme.palette.mode === 'light' ? '#F8FAFF' :
+    <Box component={"form"} onSubmit={handleSubmit} p={2} sx={{ width:'100%', backgroundColor: theme.palette.mode === 'light' ? '#F8FAFF' :
      theme.palette.background.paper, boxShadow:'0px 0px 2px rgba(0,0,0,0.25)'}}>
     <Stack direction='row' alignItems={'center'} spacing={3}>
 
@@ -101,7 +116,7 @@ const Footer = () => {
         <Box sx={{height:48, width: 48, backgroundColor:theme.palette.primary.main, 
         borderRadius: 1.5}}>
             <Stack sx={{height:'100%', width:'100%', alignItems:'center', justifyContent:'center'}}>
-                <IconButton>
+                <IconButton type='submit'>
                     <PaperPlaneTilt color='#fff'/>
                 </IconButton>
             </Stack>

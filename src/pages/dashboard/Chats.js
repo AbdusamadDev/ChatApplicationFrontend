@@ -11,18 +11,19 @@ const Chats = () => {
 
   // Assume token is stored in localStorage under the key 'token'. Adjust as needed.
   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
-  console.log(token);
+
   useEffect(() => {
     // Fetch messages from the backend URL
-    fetch('http://localhost:5000/api/messages/group_763b5f5e-464f-4b87-a7c4-14fee99c8849', {
+    fetch('http://localhost:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d', {
       headers: {
         Authorization: `Bearer ${token}` // Send token in the Authorization header
       }
     })
       .then(response => response.json())
-      .then(data => { setMessages(data.data); console.log(data); })
+      .then(data => { setMessages(data.data) })
       .catch(error => console.error('Error fetching messages:', error));
-  }, [token]); // Include token in the dependency array to refetch messages when token changes
+  }, [token]);
+
 
   return (
     <Box sx={{
