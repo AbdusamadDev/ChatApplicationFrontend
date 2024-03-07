@@ -9,7 +9,7 @@ const isAuthenticated = true;
 const DashboardLayout = () => {
   async function getMe() {
     let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
-    let me = await axios.get("http://localhost:5000/auth/me", { headers: { "Authorization": `Bearer ${token}` } })
+    let me = await axios.get("http://192.168.100.39:5000/auth/me", { headers: { "Authorization": `Bearer ${token}` } })
     // console.log("User: ", me);
     sessionStorage.setItem('user',JSON.stringify(me.data));
   }

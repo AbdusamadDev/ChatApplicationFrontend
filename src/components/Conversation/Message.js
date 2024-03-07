@@ -11,7 +11,7 @@ const Message = ({ menu }) => {
 
   async function fetchMessages() {
     let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
-    let messages = await axios.get("http://localhost:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d", { headers: { "Authorization": `Bearer ${token}` } });
+    let messages = await axios.get("http://192.168.100.39:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d", { headers: { "Authorization": `Bearer ${token}` } });
     // console.log("The messages: ", messages);
     setMessages(messages.data.data)
   }
@@ -22,7 +22,7 @@ const Message = ({ menu }) => {
     }, []
   )
 
-  const socket = new WebSocket('ws://localhost:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d')
+  const socket = new WebSocket('ws://192.168.100.39:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d')
 
   function handleGetMessages(e) {
     socket.onmessage = (value) => {

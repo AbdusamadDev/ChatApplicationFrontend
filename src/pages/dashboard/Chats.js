@@ -14,7 +14,7 @@ const Chats = () => {
 
   useEffect(() => {
     // Fetch messages from the backend URL
-    fetch('http://localhost:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d', {
+    fetch('http://192.168.100.39:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d', {
       headers: {
         Authorization: `Bearer ${token}` // Send token in the Authorization header
       }
