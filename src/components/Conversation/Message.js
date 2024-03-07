@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { Box, Stack } from '@mui/material'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Chat_History } from '../../data'
 import { DocMsg, LinkMsg, MediaMsg, ReplyMsg, TextMsg, TimeLine } from './MsgTypes';
 
 const Message = ({ menu }) => {
+  const messageContainerRef = useRef(null);
   let [messages, setMessages] = useState([]);
   let [newMessages, setNewMessages] = useState([]);
   let user = JSON.parse(sessionStorage.getItem('user'));
@@ -26,16 +27,27 @@ const Message = ({ menu }) => {
 
   function handleGetMessages(e) {
     socket.onmessage = (value) => {
-      setNewMessages((newMessages)=>([...newMessages, JSON.parse(value.data)]));
+      setNewMessages((newMessages) => ([...newMessages, JSON.parse(value.data)]));
+      scrollToBottom();
     }
   }
-  
+
   useEffect(() => {
     handleGetMessages()
   }, [])
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, newMessages]);
+
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  };
+
   return (
-    <Box p={3}>
+    <Box p={3} ref={messageContainerRef} style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
       <Stack spacing={3}>
         {
           messages?.concat(newMessages)?.map((clb, ind) => {
@@ -73,4 +85,4 @@ const Message = ({ menu }) => {
   )
 }
 
-export default Message
+export default Message;

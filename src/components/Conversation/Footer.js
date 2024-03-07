@@ -156,7 +156,6 @@ const Footer = () => {
                             <PaperPlaneTilt color='#fff' />
                         </IconButton>
                     </Stack>
-
                 </Box>
             </Stack>
         </Box>
