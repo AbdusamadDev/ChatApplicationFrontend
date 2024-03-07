@@ -4,6 +4,7 @@ import { DotsThreeVertical, DownloadSimple, Image } from 'phosphor-react';
 import React, { useEffect, useState } from 'react';
 import { Message_options } from '../../data'
 import axios from 'axios';
+import { darken } from '@mui/material/styles';
 
 
 const DocMsg = ({ el, menu }) => {
@@ -109,22 +110,33 @@ const MediaMsg = ({ el, menu }) => {
     )
 }
 
+const Avatar = ({ src }) => {
+    return <img src={src} alt="Avatar" style={{ width: 32, height: 32, borderRadius: '50%' }} />;
+};
+
+export default Avatar;
+
+
 const TextMsg = ({ el, menu, userID }) => {
     const theme = useTheme();
+    const personalColor = theme.palette.primary.main;
+    const incomingColor = darken(personalColor, 0.5); // Darken the personal color by 30%
+
     return (
-        <Stack direction='row' justifyContent={userID !== el.user.id ? 'start' : 'end'}>
+        <Stack direction='row' justifyContent={el.user.id === userID ? 'end' : 'start'}>
+            {el.user.id !== userID && <Avatar src={el.image} />}
             <Box p={1.5} sx={{
-                backgroundColor: userID !== el.user.id ? theme.palette.background.default :
-                    theme.palette.primary.main, borderRadius: 1.5, width: 'max-content'
+                backgroundColor: el.user.id === userID ? personalColor : incomingColor,
+                borderRadius: 1.5, width: 'max-content'
             }}>
-                <Typography variant='body2' color={userID !== el.user.id ? theme.palette.text : '#fff'}>
+                <Typography variant='body2' sx={{ color: el.user.id === userID ? '#fff' : theme.palette.text }} >
                     {el.message}
                 </Typography>
             </Box>
             {menu && <MessageOptions />}
         </Stack>
-    )
-}
+    );
+};
 
 const TimeLine = ({ el }) => {
     const theme = useTheme();

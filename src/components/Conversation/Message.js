@@ -71,7 +71,7 @@ const Message = ({ menu }) => {
                   return <ReplyMsg el={el} menu={menu} />
 
                 default:
-                  return <TextMsg el={el} menu={menu} />
+                  return <TextMsg el={el} menu={menu} userID={user?.id} />
               }
               break;
 
