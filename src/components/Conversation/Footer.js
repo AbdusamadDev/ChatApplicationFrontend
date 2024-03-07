@@ -124,19 +124,23 @@ const Footer = () => {
         const message = e.target.msg.value;
 
         if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({
-                message: message,
-                type: "text",
-                user: userData
-            }));
+            if (message !== "") {
+                socket.send(JSON.stringify({
+                    message: message,
+                    type: "text",
+                    user: userData
+                }));
+            }
         }
 
         e.target.msg.value = '';
     }
 
     return (
-        <Box component={"form"} onSubmit={handleSubmit} p={2} sx={{ width: '100%', backgroundColor: theme.palette.mode === 'light' ? '#F8FAFF' :
-            theme.palette.background.paper, boxShadow: '0px 0px 2px rgba(0,0,0,0.25)' }}>
+        <Box component={"form"} onSubmit={handleSubmit} p={2} sx={{
+            width: '100%', backgroundColor: theme.palette.mode === 'light' ? '#F8FAFF' :
+                theme.palette.background.paper, boxShadow: '0px 0px 2px rgba(0,0,0,0.25)'
+        }}>
             <Stack direction='row' alignItems={'center'} spacing={3}>
 
                 <Stack sx={{ width: '100%' }}>
@@ -149,8 +153,10 @@ const Footer = () => {
                     <ChatInput setOpenPicker={setOpenPicker} />
                 </Stack>
 
-                <Box sx={{ height: 48, width: 48, backgroundColor: theme.palette.primary.main,
-                    borderRadius: 1.5 }}>
+                <Box sx={{
+                    height: 48, width: 48, backgroundColor: theme.palette.primary.main,
+                    borderRadius: 1.5
+                }}>
                     <Stack sx={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <IconButton type='submit'>
                             <PaperPlaneTilt color='#fff' />

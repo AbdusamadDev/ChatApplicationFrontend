@@ -58,7 +58,6 @@ const Message = ({ menu }) => {
           switch (el.type) {
             case 'divider':
               return <TimeLine el={el} />
-
             case 'msg':
               switch (el.subtype) {
                 case 'img':
