@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Box, IconButton, Stack, Typography, Button, Divider } from '@mui/material';
+import { Box, IconButton, Stack, Typography, Button, Divider, Avatar } from '@mui/material';
 import { ArchiveBox, CircleDashed, MagnifyingGlass } from 'phosphor-react';
 import { useTheme } from '@mui/material/styles';
-import ChatElement from '../../components/ChatElement';
 import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Search';
 
 const Chats = () => {
   const theme = useTheme();
-  const [messages, setMessages] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   // Assume token is stored in localStorage under the key 'token'. Adjust as needed.
   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
 
   useEffect(() => {
-    // Fetch messages from the backend URL
-    fetch('http://192.168.100.39:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d', {
+    // Fetch groups from the backend URL
+    fetch('http://192.168.100.39:5000/api/groups', {
       headers: {
         Authorization: `Bearer ${token}` // Send token in the Authorization header
       }
     })
       .then(response => response.json())
-      .then(data => { setMessages(data.data) })
-      .catch(error => console.error('Error fetching messages:', error));
+      .then(data => { setGroups(data.groups.data) })
+      .catch(error => console.error('Error fetching groups:', error));
   }, [token]);
 
+  const handleGroupClick = (groupId) => {
+    // Handle group click event, e.g., navigate to group details page
+    console.log("Group clicked:", groupId);
+  };
 
   return (
     <Box sx={{
@@ -34,7 +37,7 @@ const Chats = () => {
       <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
         <Stack direction="row" alignItems='center' justifyContent='space-between'>
           <Typography variant='h5'>
-            Chats
+            Groups
           </Typography>
           <IconButton>
             <CircleDashed />
@@ -63,10 +66,18 @@ const Chats = () => {
         <Stack className='scrollbar' spacing={2} direction='column' sx={{ flexGrow: 1, overflow: 'scroll', height: '100%' }}>
           <Stack spacing={2.4}>
             <Typography variant='subtitle2' sx={{ color: "#676767" }}>
-              All Chats
+              All Groups
             </Typography>
-            {messages.map((message, index) => (
-              <ChatElement key={index} message={message} />
+            {groups.map((group, index) => (
+              <Box key={index} onClick={() => handleGroupClick(group.id)} sx={{ cursor: 'pointer' }}>
+                <Stack direction='row' alignItems='center' spacing={2}>
+                  <Avatar />
+                  <Box>
+                    <Typography>{group.title}</Typography>
+                    <Typography variant='body2'>{group.description}</Typography>
+                  </Box>
+                </Stack>
+              </Box>
             ))}
           </Stack>
         </Stack>

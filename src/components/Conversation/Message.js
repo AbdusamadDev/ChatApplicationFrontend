@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Box, Stack } from '@mui/material'
 import React, { useEffect, useState, useRef } from 'react';
-import { Chat_History } from '../../data'
 import { DocMsg, LinkMsg, MediaMsg, ReplyMsg, TextMsg, TimeLine } from './MsgTypes';
 
 const Message = ({ menu }) => {
@@ -25,7 +24,7 @@ const Message = ({ menu }) => {
 
   const socket = new WebSocket('ws://192.168.100.39:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d')
 
-  function handleGetMessages(e) {
+  function handleGetMessages() { // Fixed function name
     socket.onmessage = (value) => {
       setNewMessages((newMessages) => ([...newMessages, JSON.parse(value.data)]));
       scrollToBottom();
