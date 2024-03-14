@@ -88,14 +88,14 @@ const Footer = () => {
     const userData = JSON.parse(sessionStorage.getItem('user'))
     const [socket, setSocket] = useState(null);
 
-    useEffect(() => {
-        const newSocket = new WebSocket('ws://192.168.100.39:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d');
-        setSocket(newSocket);
+    // useEffect(() => {
+    //     const newSocket = new WebSocket('ws://192.168.100.39:8000/chat/1/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d');
+    //     setSocket(newSocket);
 
-        return () => {
-            newSocket.close();
-        };
-    }, []);
+    //     return () => {
+    //         newSocket.close();
+    //     };
+    // }, []);
 
     useEffect(() => {
         if (!socket) return;

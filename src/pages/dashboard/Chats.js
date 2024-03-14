@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Stack, Typography, Button, Divider, Avatar } from '@mui/material';
 import { ArchiveBox, CircleDashed, MagnifyingGlass } from 'phosphor-react';
 import { useTheme } from '@mui/material/styles';
@@ -7,15 +7,15 @@ import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Sea
 const Chats = () => {
   const theme = useTheme();
   const [groups, setGroups] = useState([]);
+  // const [targetGroup, setTargetGroup] = useState(null);
 
-  // Assume token is stored in localStorage under the key 'token'. Adjust as needed.
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
+  // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
 
+  const token = localStorage.getItem("token")
   useEffect(() => {
-    // Fetch groups from the backend URL
-    fetch('http://192.168.100.39:5000/api/groups', {
+    fetch('http://localhost:5000/api/groups', {
       headers: {
-        Authorization: `Bearer ${token}` // Send token in the Authorization header
+        Authorization: `Bearer ${token}`
       }
     })
       .then(response => response.json())
@@ -24,10 +24,8 @@ const Chats = () => {
   }, [token]);
 
   const handleGroupClick = (groupId) => {
-    // Handle group click event, e.g., navigate to group details page
-    console.log("Group clicked:", groupId);
+    sessionStorage.setItem('targetGroup', groupId);
   };
-
   return (
     <Box sx={{
       position: "relative", width: 320,
@@ -69,7 +67,7 @@ const Chats = () => {
               All Groups
             </Typography>
             {groups.map((group, index) => (
-              <Box key={index} onClick={() => handleGroupClick(group.id)} sx={{ cursor: 'pointer' }}>
+              <Box key={index} onClick={() => handleGroupClick(group.uniqueName)} sx={{ cursor: 'pointer' }}>
                 <Stack direction='row' alignItems='center' spacing={2}>
                   <Avatar />
                   <Box>
