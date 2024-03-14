@@ -6,15 +6,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, IconButton, InputAdornment, Link, Stack } from '@mui/material';
 import { RHFTextField } from '../../components/hook-form';
 import { Eye, EyeSlash } from 'phosphor-react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 const LoginForm = () => {
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  //validation rules 
+  // validation rules 
   const loginSchema = Yup.object().shape({
     username: Yup.string().required('Username is required'), // Change email to username
     password: Yup.string().required('Password is required')
@@ -30,8 +29,7 @@ const LoginForm = () => {
     defaultValues
   });
 
-  const { reset, setError, handleSubmit, formState: { errors, isSubmitting, isSubmitSuccessful } }
-    = methods;
+  const { reset, setError, handleSubmit, formState: { errors } } = methods;
 
   const onSubmit = async (data) => {
     try {
@@ -42,17 +40,22 @@ const LoginForm = () => {
       });
       // If successful response, store token to localStorage
       localStorage.setItem('token', response.data.token);
+      navigate("/app")
+      // Redirect to /app route
     } catch (error) {
       console.log(error);
       reset();
-      setError('afterSubmit', {
-        ...error,
-        message: error.message
-      });
-      // Pop up a modal for failed login
-      // You can use any modal library or component for this purpose
-      // Here's a simple alert for demonstration
-      alert('Login failed. Please check your credentials.');
+      if (error.response) {
+        if (error.response.status === 401) {
+          setError('afterSubmit', {
+            message: 'Incorrect username or password. Please try again.'
+          });
+        } else {
+          setError('afterSubmit', {
+            message: 'An error occurred. Please try again later.'
+          });
+        }
+      }
     }
   };
 

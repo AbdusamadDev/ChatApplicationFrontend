@@ -1,35 +1,44 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { Stack } from '@mui/material';
 import SideBar from "./SideBar";
-import { useEffect } from "react";
 import axios from "axios";
 
-const isAuthenticated = true;
-
 const DashboardLayout = () => {
-  async function getMe() {
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
-    let me = await axios.get("http://192.168.100.39:5000/auth/me", { headers: { "Authorization": `Bearer ${token}` } })
-    // console.log("User: ", me);
-    sessionStorage.setItem('user',JSON.stringify(me.data));
-  }
-  useEffect(()=>{
-    getMe()
-  },[])
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
-if(!isAuthenticated){
-  return <Navigate to='/auth/login'/>;
-}
+  useEffect(() => {
+    // Check if token exists in localStorage
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.get("http://localhost:5000/auth/me", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          // Request successful, user is authenticated
+          setIsLoggedIn(true);
+        })
+        .catch(error => {
+          // Request failed, redirect to login page
+          navigate('/auth/login');
+        });
+    } else {
+      // Token doesn't exist, redirect to login page
+      navigate('/auth/login');
+    }
+  }, [navigate]);
 
-
-  return (
+  // Render DashboardLayout if user is logged in
+  return isLoggedIn ? (
     <Stack direction='row'>
       {/* SideBar */}
-      <SideBar/>
+      <SideBar />
       <Outlet />
     </Stack>
-    
-  );
+  ) : null;
 };
 
 export default DashboardLayout;
