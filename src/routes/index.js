@@ -6,6 +6,7 @@ import DashboardLayout from "../layouts/dashboard";
 import MainLayout from "../layouts/main";
 
 // config
+import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
 //import Settings from "../pages/dashboard/Settings";
 
@@ -33,6 +34,7 @@ export default function Router() {
       path: '/',
       element: <DashboardLayout />,
       children: [
+        { element: <Navigate to={DEFAULT_PATH} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
         { path: 'settings', element: <Settings /> },
         { path: 'group', element: <GroupPage /> },

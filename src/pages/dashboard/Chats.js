@@ -7,10 +7,6 @@ import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Sea
 const Chats = () => {
   const theme = useTheme();
   const [groups, setGroups] = useState([]);
-  // const [targetGroup, setTargetGroup] = useState(null);
-
-  // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWJkdXNhbWFkIiwiZXhwIjoxNzQ0NjEwMDU4fQ.o8vTogEZv1A3YCRc_4zY4MthBCTVMRWT1a3foPCrjnI";
-
   const token = localStorage.getItem("token")
   useEffect(() => {
     fetch('http://localhost:5000/api/groups', {

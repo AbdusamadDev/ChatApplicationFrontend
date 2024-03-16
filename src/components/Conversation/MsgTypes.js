@@ -121,7 +121,6 @@ const TextMsg = ({ el, menu, userID }) => {
     const theme = useTheme();
     const personalColor = theme.palette.primary.main;
     const incomingColor = darken(personalColor, 0.5); // Darken the personal color by 30%
-
     return (
         <Stack direction='row' justifyContent={el.user.id === userID ? 'end' : 'start'}>
             {el.user.id !== userID && <Avatar src={el.image} />}
