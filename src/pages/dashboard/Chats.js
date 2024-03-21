@@ -4,10 +4,11 @@ import { ArchiveBox, CircleDashed, MagnifyingGlass } from 'phosphor-react';
 import { useTheme } from '@mui/material/styles';
 import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Search';
 
-const Chats = () => {
+const Chats = ({ onGroupClick }) => { // Correctly receiving props
   const theme = useTheme();
   const [groups, setGroups] = useState([]);
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     fetch('http://localhost:5000/api/groups', {
       headers: {
@@ -20,8 +21,11 @@ const Chats = () => {
   }, [token]);
 
   const handleGroupClick = (groupId) => {
+    console.log("Button is being clicked: ", groupId);
     sessionStorage.setItem('targetGroup', groupId);
+    onGroupClick(groupId); // Call the function passed via props with the group ID
   };
+
   return (
     <Box sx={{
       position: "relative", width: 320,
@@ -63,7 +67,7 @@ const Chats = () => {
               All Groups
             </Typography>
             {groups.map((group, index) => (
-              <Box key={index} onClick={() => handleGroupClick(group.uniqueName)} sx={{ cursor: 'pointer' }}>
+              <Box key={index} onClick={() => handleGroupClick(group.id)} sx={{ cursor: 'pointer' }}>
                 <Stack direction='row' alignItems='center' spacing={2}>
                   <Avatar />
                   <Box>

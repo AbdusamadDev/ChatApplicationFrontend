@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { DocMsg, LinkMsg, MediaMsg, ReplyMsg, TextMsg, TimeLine } from './MsgTypes';
 import { useNavigate } from 'react-router-dom';
 
-const Message = ({ menu }) => {
+const Message = ({ menu, selectedGroup }) => {
   const messageContainerRef = useRef(null);
   let [messages, setMessages] = useState([]);
   let [userDetails, setUserDetails] = useState([]);
@@ -25,17 +25,17 @@ const Message = ({ menu }) => {
   }, []);
 
   async function fetchMessages() {
-    const token = localStorage.getItem("token")
-    let messages = await axios.get("http://192.168.100.39:5000/api/messages/group_6f82b02a-bc8a-4999-a62d-c467bf2bbb1d", { headers: { "Authorization": `Bearer ${token}` } });
-    console.log("The messages: ", messages);
-    setMessages(messages.data.data)
+    const token = localStorage.getItem("token");
+    if (selectedGroup) { // Fetch messages only if a group is selected
+      let messages = await axios.get(`http://192.168.100.39:5000/api/messages/${selectedGroup}`, { headers: { "Authorization": `Bearer ${token}` } });
+      console.log("The messages: ", messages);
+      setMessages(messages.data.data);
+    }
   }
 
-  useEffect(
-    () => {
-      fetchMessages();
-    }, []
-  )
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedGroup]);
 
 
   // function handleGetMessages() { // Fixed function name
