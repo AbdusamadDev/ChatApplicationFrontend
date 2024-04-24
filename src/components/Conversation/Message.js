@@ -27,7 +27,7 @@ const Message = ({ menu, selectedGroup }) => {
   async function fetchMessages() {
     const token = localStorage.getItem("token");
     if (selectedGroup) { // Fetch messages only if a group is selected
-      let messages = await axios.get(`http://192.168.100.39:5000/api/messages/${selectedGroup}`, { headers: { "Authorization": `Bearer ${token}` } });
+      let messages = await axios.get(`http://localhost:5000/api/messages/${selectedGroup}`, { headers: { "Authorization": `Bearer ${token}` } });
       console.log("The messages: ", messages);
       setMessages(messages.data.data);
     }

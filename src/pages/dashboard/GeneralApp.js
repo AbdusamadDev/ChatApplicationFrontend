@@ -36,18 +36,19 @@ const GeneralApp = () => {
       </Box>
       {/* Contact */}
       {sidebar.open &&
-        (() => {
-          switch (sidebar.type) {
-            case "CONTACT":
-              return <Contact />;
-            case "STARRED":
-              return <StarredMessages />;
-            case "SHARED":
-              return <SharedMessages />;
-            default:
-              break;
-          }
-        })()}
+  (() => {
+    switch (sidebar.type) {
+      case "CONTACT":
+        return <Contact />;
+      case "STARRED":
+        return <StarredMessages />;
+      case "SHARED":
+        return <SharedMessages />;
+      default:
+        return null; // Return null if sidebar type doesn't match any case
+    }
+  })()}
+
     </Stack>
   );
 };
